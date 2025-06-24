@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -23,10 +23,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "firstName")
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "lastName")
     private String lastName;
 
     @Enumerated(EnumType.STRING)
@@ -39,14 +39,14 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "isVerified")
     private boolean isVerified;
 
-    @Column(nullable = false,updatable = false)
-    private LocalDateTime createdAt;
+    @Column(nullable = false, updatable = false, name = "createdAt")
+    private OffsetDateTime createdAt;
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
+    @Column(nullable = false, name = "updatedAt")
+    private OffsetDateTime updatedAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
