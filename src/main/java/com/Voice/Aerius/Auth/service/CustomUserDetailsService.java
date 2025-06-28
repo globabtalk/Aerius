@@ -42,7 +42,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User newUser = new User();
         newUser.setEmail(request.getEmail());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        newUser.setRole("ROLE_USER");
+        newUser.setRole("user");
 
         User savedUser = userRepository.save(newUser);
         return new UserResponce(savedUser.getId(), savedUser.getEmail(), savedUser.getRole());
