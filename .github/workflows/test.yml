@@ -1,0 +1,96 @@
+name: aerius-test
+on:
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      # PostgreSQL Environment Variables
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: org.postgresql.Driver
+      SPRING_JPA_HIBERNATE_DDL-AUTO: validate
+      SPRING_JPA_SHOW_SQL: true
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
+      APP_JWT_SECRET: test-secret-1234567890-1234567890-1234567890
+      APP_JWT_EXPIRATION_MILLISECONDS: 86400000
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      rabbitmq:
+        image: rabbitmq:3-management-alpine
+        ports:
+          - 5672:5672
+          - 15672:15672
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..30}; do
+            if PGPASSWORD=postgres pg_isready -h localhost -p 5432 -U postgres; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting for PostgreSQL...($i/30)"
+            sleep 2
+          done
+          if ! PGPASSWORD=postgres pg_isready -h localhost -p 5432 -U postgres; then
+            echo "PostgreSQL failed to start."
+            exit 1
+          fi
+
+      - name: Verify PostgreSQL Connection
+        run: |
+          PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -d testdb -c 'SELECT 1'
+          if [ $? -eq 0 ]; then
+            echo "PostgreSQL connection successful."
+          else
+            echo "PostgreSQL connection failed."
+            exit 1
+          fi
+
+      - name: Cache Maven Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Apply Flyway Migrations
+        run: mvn flyway:migrate -Dflyway.url=${{ env.SPRING_DATASOURCE_URL }} -Dflyway.user=${{ env.SPRING_DATASOURCE_USERNAME }} -Dflyway.password=${{ env.SPRING_DATASOURCE_PASSWORD }}
+
+      - name: Validate Migrations
+        run: mvn flyway:validate -Dflyway.url=${{ env.SPRING_DATASOURCE_URL }} -Dflyway.user=${{ env.SPRING_DATASOURCE_USERNAME }} -Dflyway.password=${{ env.SPRING_DATASOURCE_PASSWORD }}
+
+      - name: Build and Test
+        run: mvn clean verify -Dspring.profiles.active=test
