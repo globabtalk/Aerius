@@ -84,7 +84,7 @@ public class User implements UserDetails {
         return true;
     }
 
-    public String getRole(){
+    public Role getRole(){
         return role.toString();
     }
 }
