@@ -40,8 +40,8 @@ public class JwtTokenProvider {
 
         Claims claim = Jwts.claims()
                 .subject(user.getEmail())
-                .add("roles",user.getRole())
-                .add("userId",user.getId())
+                .add("roles", user.getRole())
+                .add("userId", user.getId())
                 .build();
 
         return Jwts.builder()

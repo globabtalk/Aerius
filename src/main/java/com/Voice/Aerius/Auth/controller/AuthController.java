@@ -1,10 +1,9 @@
 package com.Voice.Aerius.Auth.controller;
 
 import com.Voice.Aerius.Auth.service.AuthService;
-import com.Voice.Aerius.Auth.service.CustomUserDetailsService;
-import com.Voice.Aerius.dto.UserData;
-import com.Voice.Aerius.dto.request.UserRegistrationRequest;
-import com.Voice.Aerius.dto.response.UserResponse;
+import com.Voice.Aerius.Auth.dto.UserData;
+import com.Voice.Aerius.Auth.dto.request.UserRegistrationRequest;
+import com.Voice.Aerius.Auth.dto.response.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

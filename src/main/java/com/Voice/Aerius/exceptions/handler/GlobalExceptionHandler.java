@@ -1,9 +1,6 @@
 package com.Voice.Aerius.exceptions.handler;
 
-import com.Voice.Aerius.exceptions.customexceptions.BadRequestException;
-import com.Voice.Aerius.exceptions.customexceptions.ConflictException;
-import com.Voice.Aerius.exceptions.customexceptions.ForbiddenException;
-import com.Voice.Aerius.exceptions.customexceptions.UnauthorizedException;
+import com.Voice.Aerius.exceptions.customexceptions.*;
 import com.Voice.Aerius.exceptions.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +66,15 @@ public class GlobalExceptionHandler {
         errorResponse.setError(HttpStatus.UNAUTHORIZED.getReasonPhrase());
         errorResponse.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex) {
+        errorResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+        errorResponse.setError(HttpStatus.NOT_FOUND.getReasonPhrase());
+        errorResponse.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)

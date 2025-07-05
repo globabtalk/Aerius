@@ -1,7 +1,6 @@
-package com.Voice.Aerius.dto.request;
+package com.Voice.Aerius.Auth.dto.request;
 
-import com.Voice.Aerius.Auth.enums.Role;
-import jakarta.validation.Valid;
+
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -20,15 +19,19 @@ public class UserRegistrationRequest {
     private String lastName;
 
     @NotNull(message="password cannot be blank")
-    @Size(min =8 ,message = "must be atleast 8 characters")
+    @Size(min = 8, message = "must be at least 8 characters")
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
+    )
     private String password;
 
 
     @NotNull(message="email cannot be blank")
-    @Email(message = "enter a valid email")
     @Pattern(
             regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
             message = "Email must be a valid email address format"
     )
+    @Email(message = "enter a valid email")
     private String email;
 }

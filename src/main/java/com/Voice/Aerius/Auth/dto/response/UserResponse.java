@@ -1,4 +1,4 @@
-package com.Voice.Aerius.dto.response;
+package com.Voice.Aerius.Auth.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

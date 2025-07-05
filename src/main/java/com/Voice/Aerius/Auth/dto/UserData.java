@@ -1,4 +1,4 @@
-package com.Voice.Aerius.dto;
+package com.Voice.Aerius.Auth.dto;
 
 import com.Voice.Aerius.Auth.enums.Role;
 import lombok.AllArgsConstructor;
