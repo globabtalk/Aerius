@@ -23,10 +23,10 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false)
+    @Column(name = "firstname", nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(name = "lastname", nullable = false)
     private String lastName;
 
     @Enumerated(EnumType.STRING)
@@ -39,14 +39,20 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "isverified", nullable = false)
     private boolean isVerified;
 
-    @Column(nullable = false,updatable = false)
+    @Column(name = "createdat",nullable = false,updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updatedat", nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(name = "token")
+    private String token;
+
+    @Column(name = "tokenExpiry")
+    private LocalDateTime tokenExpiry;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
