@@ -4,7 +4,7 @@ import com.Voice.Aerius.Auth.enums.Role;
 import com.Voice.Aerius.Auth.interfaces.SignAuthService;
 import com.Voice.Aerius.Auth.model.User;
 import com.Voice.Aerius.Auth.repository.UserRepository;
-import com.Voice.Aerius.Auth.dto.UserData;
+import com.Voice.Aerius.entity.UserData;
 import com.Voice.Aerius.Auth.dto.request.UserRegistrationRequest;
 import com.Voice.Aerius.Auth.dto.response.UserResponse;
 import com.Voice.Aerius.exceptions.customexceptions.ConflictException;
