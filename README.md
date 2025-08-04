@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# Aerius Communication Tool
-Aerius is an AI-Powered Real-time communication tool that enables real-time, bidirectional voice call translation between speakers of different languages with minimal latency, supporting natural conversation flow.
-=======
 # Aerius: AI-Powered Real-Time Multilingual Communication Platform
 Aerius is a sophisticated real-time communication platform engineered to dissolve language barriers in live audio and video conversations. The application enables multiple users to engage in a seamless dialogue, each speaking and listening in their own preferred language. By integrating a suite of advanced AI services, Aerius provides instantaneous translation, creating an inclusive and effective communication environment for global teams, international business, and cross-cultural interactions.
 
@@ -39,4 +35,3 @@ The core of the system captures a speaker's audio, transcribes it to text, trans
 |                       | DELETE     | /api/admin/users/{userId}                        | Deletes or deactivates a specific user's account.                  |
 |                       | GET        | /api/admin/conversations                         | Retrieves a list of all conversations on the platform.             |
 |                       | GET        | /api/admin/analytics/summary                     | Retrieves platform usage statistics.                               |
->>>>>>> upstream/main
