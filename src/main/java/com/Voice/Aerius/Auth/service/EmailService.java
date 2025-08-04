@@ -1,4 +1,4 @@
-package com.Voice.Aerius.Service;
+package com.Voice.Aerius.Auth.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;

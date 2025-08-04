@@ -1,40 +1,34 @@
-package com.Voice.Aerius.Controller;
+package com.Voice.Aerius.Auth.controller;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Voice.Aerius.Repository.UserRepository;
-import com.Voice.Aerius.Service.EmailService;
-
+import com.Voice.Aerius.Auth.service.EmailService;
+import com.Voice.Aerius.Auth.repository.UserRepository;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Bucket4j;
 import io.github.bucket4j.Refill;
+import lombok.RequiredArgsConstructor;
 
 import java.time.Duration;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @RestController
 public class ForgotPasswordController {
 
-    private EmailService service;
-    private UserRepository userRepository;
-    private static String RESPONSE_SUCCESS = "Password reset mail sent to your mail";
-    private static String RESPONSE_FAILURE = "Something went wrong";
-    private static String RESPONSE_TOO_MANY_REQUESTS = "Too many requests, try after 60 sec";
+    private final EmailService service;
+    private final UserRepository userRepository;
+    private final static String RESPONSE_SUCCESS = "Password reset mail sent to your mail";
+    private final static String RESPONSE_FAILURE = "Something went wrong";
+    private final static String RESPONSE_TOO_MANY_REQUESTS = "Too many requests, try after 60 sec";
     public final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
-
-    @Autowired
-    public ForgotPasswordController(EmailService service, UserRepository userRepository){
-        this.service = service;
-        this.userRepository = userRepository;
-    }
 
     public Bucket resolveBucket(String userIdOrIp) {
         return buckets.computeIfAbsent(userIdOrIp, key -> 
@@ -42,10 +36,9 @@ public class ForgotPasswordController {
     
     }
 
-    @GetMapping("/forgot-password/{email}")
-    public ResponseEntity<String> sendForgotPasswordMail(@PathVariable String email){
+    @GetMapping("/forgot-password")
+    public ResponseEntity<String> sendForgotPasswordMail(@RequestBody String email){
         Bucket bucket = resolveBucket(email);
-        System.out.println("Tokens left " + bucket.getAvailableTokens());
         if(bucket.tryConsume(1))
         {
             try{

@@ -1,9 +1,9 @@
 package com.Voice.Aerius;
 
+import com.Voice.Aerius.Auth.controller.ForgotPasswordController;
 import com.Voice.Aerius.Auth.model.User;
-import com.Voice.Aerius.Controller.ForgotPasswordController;
-import com.Voice.Aerius.Repository.UserRepository;
-import com.Voice.Aerius.Service.EmailService;
+import com.Voice.Aerius.Auth.repository.UserRepository;
+import com.Voice.Aerius.Auth.service.EmailService;
 
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Bucket4j;
@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -35,7 +36,7 @@ public class ForgotPasswordControllerTest {
     @Test
     public void testSendForgotPasswordMail_success() {
         String email = "test@example.com";
-        when(userRepository.findByEmail(email)).thenReturn(new User());
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
 
         controller.buckets.put(email, Bucket4j.builder()
                 .addLimit(Bandwidth.classic(3, Refill.greedy(3, Duration.ofMinutes(1))))
@@ -84,7 +85,7 @@ public class ForgotPasswordControllerTest {
     @Test
     public void testSendForgotPasswordMail_exceptionHandling() {
         String email = "exception@example.com";
-        when(userRepository.findByEmail(email)).thenReturn(new User());
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
         doThrow(new RuntimeException("Failed")).when(emailService).sendForgotPasswordMail(email);
 
         controller.buckets.put(email, Bucket4j.builder()

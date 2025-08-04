@@ -19,25 +19,18 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
     private final ObjectMapper objectMapper;
+
     @Override
-    public void commence(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            AuthenticationException exception
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception
     ) throws IOException, ServletException{
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         Map<String,Object> jsonBody=new LinkedHashMap<>();
-        jsonBody.put("status",
-                HttpStatus.UNAUTHORIZED.value());
-        jsonBody.put("error",
-                HttpStatus.UNAUTHORIZED.getReasonPhrase());
-        jsonBody.put("message",
-                exception.getMessage());
-        jsonBody.put("path",
-                request.getRequestURI());
+        jsonBody.put("status", HttpStatus.UNAUTHORIZED.value());
+        jsonBody.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+        jsonBody.put("message", exception.getMessage());
+        jsonBody.put("path", request.getRequestURI());
         objectMapper.writeValue(response.getWriter(),jsonBody);
 
     }

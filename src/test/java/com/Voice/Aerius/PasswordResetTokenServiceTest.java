@@ -1,13 +1,14 @@
 package com.Voice.Aerius;
 
 import com.Voice.Aerius.Auth.model.User;
-import com.Voice.Aerius.Repository.UserRepository;
-import com.Voice.Aerius.Service.PasswordResetTokenService;
+import com.Voice.Aerius.Auth.service.PasswordResetTokenService;
+import com.Voice.Aerius.Auth.repository.UserRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +35,7 @@ public class PasswordResetTokenServiceTest {
         user.setToken(existingToken);
         user.setTokenExpiry(LocalDateTime.now().plusMinutes(30)); // valid token
 
-        when(userRepository.findByEmail(email)).thenReturn(user);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         System.out.println(user.getToken() + " " + existingToken);
         String token = tokenService.createOrRetrieveToken(email);
         System.out.println(user.getToken() + " " + token);
@@ -52,7 +53,7 @@ public class PasswordResetTokenServiceTest {
         user.setToken(oldToken);
         user.setTokenExpiry(LocalDateTime.now().minusHours(1)); // expired
 
-        when(userRepository.findByEmail(email)).thenReturn(user);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         String newToken = tokenService.createOrRetrieveToken(email);
 

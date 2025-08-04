@@ -1,4 +1,4 @@
-package com.Voice.Aerius.Service;
+package com.Voice.Aerius.Auth.service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Voice.Aerius.Auth.model.User;
-import com.Voice.Aerius.Repository.UserRepository;
+import com.Voice.Aerius.Auth.repository.UserRepository;
 
 @Service
 public class PasswordResetTokenService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     
     @Autowired
     public PasswordResetTokenService(UserRepository userRepository){
@@ -20,7 +20,9 @@ public class PasswordResetTokenService {
     }
 
     public String createOrRetrieveToken(String email){
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElse(null);
+        if(user == null)
+            return null;
         if(user.getToken() != null && user.getTokenExpiry().plusHours(1).isBefore(LocalDateTime.now()))
             return user.getToken();
         else
