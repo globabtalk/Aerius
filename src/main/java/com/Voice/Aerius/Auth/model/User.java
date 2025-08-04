@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Collections;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -47,6 +48,12 @@ public class User implements UserDetails {
 
     @Column(nullable = false, name = "updatedAt")
     private OffsetDateTime updatedAt;
+
+    @Column(name = "token")
+    private String token;
+
+    @Column(name = "tokenExpiry")
+    private LocalDateTime tokenExpiry;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
