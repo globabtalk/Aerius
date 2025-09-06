@@ -1,6 +1,7 @@
 package com.Voice.Aerius.Auth.model;
 
 import com.Voice.Aerius.Auth.enums.Role;
+import com.Voice.Aerius.Auth.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -51,6 +52,10 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + getRole()));
+
+        @Enumerated(EnumType.STRING)
+        @Column(nullable = false)
+        private UserStatus status = UserStatus.UNVERIFIED;
     }
 
     @Override
