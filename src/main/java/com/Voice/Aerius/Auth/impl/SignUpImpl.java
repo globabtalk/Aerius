@@ -8,6 +8,7 @@ import com.Voice.Aerius.entity.UserData;
 import com.Voice.Aerius.Auth.dto.request.UserRegistrationRequest;
 import com.Voice.Aerius.Auth.dto.response.UserResponse;
 import com.Voice.Aerius.exceptions.customexceptions.ConflictException;
+import com.Voice.Aerius.massages.service.EmailSendingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,7 @@ import java.time.OffsetDateTime;
 public class SignUpImpl implements SignAuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailSendingService emailSendingService;
 
     @Override
     public UserResponse<UserData> signup(UserRegistrationRequest regrequest){
@@ -39,6 +41,8 @@ public class SignUpImpl implements SignAuthService {
         user.setUpdatedAt(OffsetDateTime.now());
         userRepository.save(user);
 
+
+
         UserData userData=new UserData();
         userData.setId(user.getId());
         userData.setFirstName(user.getFirstName());
@@ -48,6 +52,8 @@ public class SignUpImpl implements SignAuthService {
         userData.setVerified(user.isVerified());
         userData.setCreatedAt(user.getCreatedAt());
         userData.setUpdatedAt(user.getUpdatedAt());
+
+        //emailSendingService.sendEmail();
 
         return UserResponse.<UserData>builder()
                 .statusCode(HttpStatus.CREATED.value())
